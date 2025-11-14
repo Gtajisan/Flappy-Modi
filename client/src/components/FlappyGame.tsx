@@ -5,14 +5,31 @@ import { getLocalStorage, setLocalStorage } from "@/lib/utils";
 import GameMenu from "./GameMenu";
 import GameUI from "./GameUI";
 import GameOver from "./GameOver";
+import { 
+  createExplosionParticles, 
+  createScoreParticles, 
+  updateParticles, 
+  renderParticles 
+} from "./ParticleSystem";
 
-const GRAVITY = 0.5;
-const JUMP_FORCE = -9;
-const BIRD_SIZE = 40;
-const PIPE_WIDTH = 80;
-const PIPE_GAP = 180;
-const PIPE_SPEED = 3;
-const GROUND_HEIGHT = 100;
+interface Particle {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  life: number;
+  maxLife: number;
+  color: string;
+  size: number;
+}
+
+const GRAVITY = 0.6;
+const JUMP_FORCE = -10;
+const BIRD_SIZE = 50;
+const PIPE_WIDTH = 90;
+const PIPE_GAP = 200;
+const PIPE_SPEED = 3.5;
+const GROUND_HEIGHT = 120;
 
 interface Bird {
   x: number;
@@ -30,20 +47,62 @@ interface Pipe {
 export default function FlappyGame() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { phase, start, end, restart } = useGame();
-  const { playHit, playSuccess, backgroundMusic, isMuted, toggleMute } = useAudio();
+  const { playHit, playSuccess, playSwing, backgroundMusic, isMuted, toggleMute } = useAudio();
   
   const [score, setScore] = useState(0);
   const [highScore, setHighScore] = useState(() => getLocalStorage("flappyModiHighScore") || 0);
+  const [imagesLoaded, setImagesLoaded] = useState(false);
   
   const birdRef = useRef<Bird>({ x: 150, y: 300, velocity: 0, rotation: 0 });
   const pipesRef = useRef<Pipe[]>([]);
   const frameRef = useRef<number>(0);
   const animationRef = useRef<number>(0);
+  const bgScrollRef = useRef<number>(0);
+  const particlesRef = useRef<Particle[]>([]);
+  
+  const modiImgRef = useRef<HTMLImageElement | null>(null);
+  const bgImgRef = useRef<HTMLImageElement | null>(null);
+  const pipeImgRef = useRef<HTMLImageElement | null>(null);
+  const groundImgRef = useRef<HTMLImageElement | null>(null);
+
+  useEffect(() => {
+    const modiImg = new Image();
+    const bgImg = new Image();
+    const pipeImg = new Image();
+    const groundImg = new Image();
+    
+    let loadedCount = 0;
+    const totalImages = 4;
+    
+    const checkAllLoaded = () => {
+      loadedCount++;
+      if (loadedCount === totalImages) {
+        setImagesLoaded(true);
+      }
+    };
+    
+    modiImg.onload = checkAllLoaded;
+    bgImg.onload = checkAllLoaded;
+    pipeImg.onload = checkAllLoaded;
+    groundImg.onload = checkAllLoaded;
+    
+    modiImg.src = "/images/modi.png";
+    bgImg.src = "/images/bg.png";
+    pipeImg.src = "/images/dr.png";
+    groundImg.src = "/images/br.jpg";
+    
+    modiImgRef.current = modiImg;
+    bgImgRef.current = bgImg;
+    pipeImgRef.current = pipeImg;
+    groundImgRef.current = groundImg;
+  }, []);
 
   const resetGame = () => {
     birdRef.current = { x: 150, y: 300, velocity: 0, rotation: 0 };
     pipesRef.current = [];
     frameRef.current = 0;
+    bgScrollRef.current = 0;
+    particlesRef.current = [];
     setScore(0);
     restart();
     if (backgroundMusic && !isMuted) {
@@ -55,30 +114,32 @@ export default function FlappyGame() {
   const handleJump = () => {
     if (phase === "ready") {
       start();
-      if (backgroundMusic && isMuted === false) {
+      if (backgroundMusic && !isMuted) {
         backgroundMusic.play().catch(() => {});
       }
     }
     
     if (phase === "playing") {
       birdRef.current.velocity = JUMP_FORCE;
+      playSwing();
     }
   };
 
   const handleToggleMute = () => {
+    const newMutedState = !isMuted;
     toggleMute();
     if (backgroundMusic) {
-      if (!isMuted) {
+      if (newMutedState) {
         backgroundMusic.pause();
       } else {
-        if (phase === "playing") {
-          backgroundMusic.play().catch(() => {});
-        }
+        backgroundMusic.play().catch(() => {});
       }
     }
   };
 
   useEffect(() => {
+    if (!imagesLoaded) return;
+    
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -98,11 +159,13 @@ export default function FlappyGame() {
       }
 
       for (const pipe of pipes) {
-        if (
-          bird.x + BIRD_SIZE / 2 > pipe.x &&
-          bird.x - BIRD_SIZE / 2 < pipe.x + PIPE_WIDTH
-        ) {
-          if (bird.y - BIRD_SIZE / 2 < pipe.topHeight || bird.y + BIRD_SIZE / 2 > pipe.topHeight + PIPE_GAP) {
+        const birdLeft = bird.x - BIRD_SIZE / 2;
+        const birdRight = bird.x + BIRD_SIZE / 2;
+        const birdTop = bird.y - BIRD_SIZE / 2;
+        const birdBottom = bird.y + BIRD_SIZE / 2;
+        
+        if (birdRight > pipe.x && birdLeft < pipe.x + PIPE_WIDTH) {
+          if (birdTop < pipe.topHeight || birdBottom > pipe.topHeight + PIPE_GAP) {
             return true;
           }
         }
@@ -115,20 +178,38 @@ export default function FlappyGame() {
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      const skyGradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-      skyGradient.addColorStop(0, "#4EC0CA");
-      skyGradient.addColorStop(1, "#87CEEB");
-      ctx.fillStyle = skyGradient;
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      if (phase === "playing") {
+        bgScrollRef.current = (bgScrollRef.current + 0.5) % canvas.width;
+      }
+
+      if (bgImgRef.current) {
+        const bgWidth = canvas.width;
+        const bgHeight = canvas.height;
+        const pattern = ctx.createPattern(bgImgRef.current, "repeat");
+        if (pattern) {
+          ctx.save();
+          ctx.translate(-bgScrollRef.current, 0);
+          ctx.fillStyle = pattern;
+          ctx.fillRect(0, 0, bgWidth + bgScrollRef.current, bgHeight);
+          ctx.fillRect(bgWidth, 0, bgWidth, bgHeight);
+          ctx.restore();
+        }
+      } else {
+        const skyGradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+        skyGradient.addColorStop(0, "#4EC0CA");
+        skyGradient.addColorStop(1, "#87CEEB");
+        ctx.fillStyle = skyGradient;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+      }
 
       if (phase === "playing") {
         const bird = birdRef.current;
         bird.velocity += GRAVITY;
         bird.y += bird.velocity;
-        bird.rotation = Math.min(Math.max(bird.velocity * 3, -30), 90);
+        bird.rotation = Math.min(Math.max(bird.velocity * 2.5, -25), 90);
 
         frameRef.current++;
-        if (frameRef.current % 100 === 0) {
+        if (frameRef.current % 90 === 0) {
           const minHeight = 100;
           const maxHeight = canvas.height - GROUND_HEIGHT - PIPE_GAP - 100;
           const topHeight = Math.random() * (maxHeight - minHeight) + minHeight;
@@ -141,6 +222,7 @@ export default function FlappyGame() {
           
           if (!pipes[i].scored && pipes[i].x + PIPE_WIDTH < bird.x - BIRD_SIZE / 2) {
             pipes[i].scored = true;
+            particlesRef.current.push(...createScoreParticles(pipes[i].x + PIPE_WIDTH, pipes[i].topHeight + PIPE_GAP / 2));
             setScore(prev => {
               const newScore = prev + 1;
               if (newScore > highScore) {
@@ -158,6 +240,7 @@ export default function FlappyGame() {
         }
 
         if (checkCollision(bird, pipes, canvas.height)) {
+          particlesRef.current.push(...createExplosionParticles(bird.x, bird.y, "#FF5722"));
           end();
           playHit();
           if (backgroundMusic) {
@@ -167,69 +250,75 @@ export default function FlappyGame() {
         }
       }
 
+      particlesRef.current = updateParticles(particlesRef.current);
+
       const pipes = pipesRef.current;
       for (const pipe of pipes) {
-        ctx.fillStyle = "#2ECC71";
-        ctx.strokeStyle = "#27AE60";
-        ctx.lineWidth = 3;
-        
-        ctx.fillRect(pipe.x, 0, PIPE_WIDTH, pipe.topHeight);
-        ctx.strokeRect(pipe.x, 0, PIPE_WIDTH, pipe.topHeight);
-        
-        ctx.fillRect(pipe.x, pipe.topHeight + PIPE_GAP, PIPE_WIDTH, canvas.height - GROUND_HEIGHT - pipe.topHeight - PIPE_GAP);
-        ctx.strokeRect(pipe.x, pipe.topHeight + PIPE_GAP, PIPE_WIDTH, canvas.height - GROUND_HEIGHT - pipe.topHeight - PIPE_GAP);
-        
-        ctx.fillStyle = "#239B56";
-        ctx.fillRect(pipe.x - 5, pipe.topHeight - 30, PIPE_WIDTH + 10, 30);
-        ctx.strokeRect(pipe.x - 5, pipe.topHeight - 30, PIPE_WIDTH + 10, 30);
-        ctx.fillRect(pipe.x - 5, pipe.topHeight + PIPE_GAP, PIPE_WIDTH + 10, 30);
-        ctx.strokeRect(pipe.x - 5, pipe.topHeight + PIPE_GAP, PIPE_WIDTH + 10, 30);
+        if (pipeImgRef.current) {
+          ctx.save();
+          ctx.translate(pipe.x + PIPE_WIDTH / 2, pipe.topHeight);
+          ctx.scale(1, -1);
+          ctx.drawImage(
+            pipeImgRef.current,
+            -PIPE_WIDTH / 2,
+            0,
+            PIPE_WIDTH,
+            pipe.topHeight + 50
+          );
+          ctx.restore();
+          
+          ctx.drawImage(
+            pipeImgRef.current,
+            pipe.x,
+            pipe.topHeight + PIPE_GAP,
+            PIPE_WIDTH,
+            canvas.height - GROUND_HEIGHT - pipe.topHeight - PIPE_GAP + 50
+          );
+        } else {
+          ctx.fillStyle = "#2ECC71";
+          ctx.fillRect(pipe.x, 0, PIPE_WIDTH, pipe.topHeight);
+          ctx.fillRect(pipe.x, pipe.topHeight + PIPE_GAP, PIPE_WIDTH, canvas.height - GROUND_HEIGHT - pipe.topHeight - PIPE_GAP);
+        }
       }
 
-      const groundGradient = ctx.createLinearGradient(0, canvas.height - GROUND_HEIGHT, 0, canvas.height);
-      groundGradient.addColorStop(0, "#8B4513");
-      groundGradient.addColorStop(1, "#654321");
-      ctx.fillStyle = groundGradient;
-      ctx.fillRect(0, canvas.height - GROUND_HEIGHT, canvas.width, GROUND_HEIGHT);
-      
-      ctx.strokeStyle = "#3E2723";
-      ctx.lineWidth = 4;
-      ctx.beginPath();
-      ctx.moveTo(0, canvas.height - GROUND_HEIGHT);
-      ctx.lineTo(canvas.width, canvas.height - GROUND_HEIGHT);
-      ctx.stroke();
+      if (groundImgRef.current) {
+        const pattern = ctx.createPattern(groundImgRef.current, "repeat-x");
+        if (pattern) {
+          ctx.fillStyle = pattern;
+          ctx.fillRect(0, canvas.height - GROUND_HEIGHT, canvas.width, GROUND_HEIGHT);
+        }
+      } else {
+        ctx.fillStyle = "#8B4513";
+        ctx.fillRect(0, canvas.height - GROUND_HEIGHT, canvas.width, GROUND_HEIGHT);
+      }
 
       const bird = birdRef.current;
       ctx.save();
       ctx.translate(bird.x, bird.y);
       ctx.rotate((bird.rotation * Math.PI) / 180);
       
-      ctx.fillStyle = "#FF9800";
-      ctx.beginPath();
-      ctx.ellipse(0, 0, BIRD_SIZE / 2, BIRD_SIZE / 2.5, 0, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.strokeStyle = "#F57C00";
-      ctx.lineWidth = 2;
-      ctx.stroke();
-      
-      ctx.fillStyle = "#FFF";
-      ctx.beginPath();
-      ctx.arc(-8, -8, 8, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.fillStyle = "#000";
-      ctx.beginPath();
-      ctx.arc(-6, -8, 4, 0, Math.PI * 2);
-      ctx.fill();
-      
-      ctx.fillStyle = "#FF5722";
-      ctx.beginPath();
-      ctx.moveTo(BIRD_SIZE / 3, 0);
-      ctx.lineTo(BIRD_SIZE / 2 + 5, -3);
-      ctx.lineTo(BIRD_SIZE / 2 + 5, 3);
-      ctx.closePath();
-      ctx.fill();
+      if (modiImgRef.current) {
+        ctx.shadowColor = "rgba(0, 0, 0, 0.3)";
+        ctx.shadowBlur = 10;
+        ctx.shadowOffsetX = 3;
+        ctx.shadowOffsetY = 3;
+        ctx.drawImage(
+          modiImgRef.current,
+          -BIRD_SIZE / 2,
+          -BIRD_SIZE / 2,
+          BIRD_SIZE,
+          BIRD_SIZE
+        );
+      } else {
+        ctx.fillStyle = "#FF9800";
+        ctx.beginPath();
+        ctx.ellipse(0, 0, BIRD_SIZE / 2, BIRD_SIZE / 2.5, 0, 0, Math.PI * 2);
+        ctx.fill();
+      }
       
       ctx.restore();
+
+      renderParticles(ctx, particlesRef.current);
 
       animationRef.current = requestAnimationFrame(gameLoop);
     };
@@ -240,7 +329,7 @@ export default function FlappyGame() {
       cancelAnimationFrame(animationRef.current);
       window.removeEventListener("resize", resizeCanvas);
     };
-  }, [phase, end, playHit, playSuccess, highScore, backgroundMusic]);
+  }, [phase, end, playHit, playSuccess, highScore, backgroundMusic, imagesLoaded]);
 
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
@@ -270,7 +359,7 @@ export default function FlappyGame() {
   }, [phase, start, isMuted]);
 
   return (
-    <div style={{ width: "100vw", height: "100vh", position: "relative", overflow: "hidden" }}>
+    <div style={{ width: "100vw", height: "100vh", position: "relative", overflow: "hidden", background: "#4EC0CA" }}>
       <canvas ref={canvasRef} style={{ display: "block", touchAction: "none" }} />
       
       {phase === "ready" && <GameMenu onStart={handleJump} />}
@@ -281,6 +370,25 @@ export default function FlappyGame() {
       
       {phase === "ended" && (
         <GameOver score={score} highScore={highScore} onRestart={resetGame} />
+      )}
+      
+      {!imagesLoaded && (
+        <div style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          background: "#4EC0CA",
+          color: "white",
+          fontSize: "2rem",
+          fontWeight: "bold"
+        }}>
+          Loading Game...
+        </div>
       )}
     </div>
   );

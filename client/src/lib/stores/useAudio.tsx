@@ -4,37 +4,61 @@ interface AudioState {
   backgroundMusic: HTMLAudioElement | null;
   hitSound: HTMLAudioElement | null;
   successSound: HTMLAudioElement | null;
+  swingSound: HTMLAudioElement | null;
   isMuted: boolean;
   
   // Setter functions
   setBackgroundMusic: (music: HTMLAudioElement) => void;
   setHitSound: (sound: HTMLAudioElement) => void;
   setSuccessSound: (sound: HTMLAudioElement) => void;
+  setSwingSound: (sound: HTMLAudioElement) => void;
   
   // Control functions
   toggleMute: () => void;
   playHit: () => void;
   playSuccess: () => void;
+  playSwing: () => void;
 }
 
 export const useAudio = create<AudioState>((set, get) => ({
   backgroundMusic: null,
   hitSound: null,
   successSound: null,
+  swingSound: null,
   isMuted: true, // Start muted by default
   
-  setBackgroundMusic: (music) => set({ backgroundMusic: music }),
-  setHitSound: (sound) => set({ hitSound: sound }),
-  setSuccessSound: (sound) => set({ successSound: sound }),
+  setBackgroundMusic: (music) => {
+    const { isMuted } = get();
+    music.muted = isMuted;
+    set({ backgroundMusic: music });
+  },
+  setHitSound: (sound) => {
+    const { isMuted } = get();
+    sound.muted = isMuted;
+    set({ hitSound: sound });
+  },
+  setSuccessSound: (sound) => {
+    const { isMuted } = get();
+    sound.muted = isMuted;
+    set({ successSound: sound });
+  },
+  setSwingSound: (sound) => {
+    const { isMuted } = get();
+    sound.muted = isMuted;
+    set({ swingSound: sound });
+  },
   
   toggleMute: () => {
-    const { isMuted } = get();
+    const { isMuted, backgroundMusic, hitSound, successSound, swingSound } = get();
     const newMutedState = !isMuted;
     
-    // Just update the muted state
     set({ isMuted: newMutedState });
     
-    // Log the change
+    if (backgroundMusic) backgroundMusic.muted = newMutedState;
+    if (hitSound) hitSound.muted = newMutedState;
+    if (successSound) successSound.muted = newMutedState;
+    if (swingSound) swingSound.muted = newMutedState;
+    
     console.log(`Sound ${newMutedState ? 'muted' : 'unmuted'}`);
   },
   
@@ -59,7 +83,6 @@ export const useAudio = create<AudioState>((set, get) => ({
   playSuccess: () => {
     const { successSound, isMuted } = get();
     if (successSound) {
-      // If sound is muted, don't play anything
       if (isMuted) {
         console.log("Success sound skipped (muted)");
         return;
@@ -69,6 +92,15 @@ export const useAudio = create<AudioState>((set, get) => ({
       successSound.play().catch(error => {
         console.log("Success sound play prevented:", error);
       });
+    }
+  },
+  
+  playSwing: () => {
+    const { swingSound, isMuted } = get();
+    if (swingSound && !isMuted) {
+      const soundClone = swingSound.cloneNode() as HTMLAudioElement;
+      soundClone.volume = 0.4;
+      soundClone.play().catch(() => {});
     }
   }
 }));
