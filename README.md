@@ -1,5 +1,4 @@
 # Flappy Modi
-
 A web-based Flappy Bird style game featuring responsive design and cross-platform compatibility. Built with modern web technologies for optimal performance and smooth gameplay.
 
 ## Author
@@ -7,6 +6,8 @@ A web-based Flappy Bird style game featuring responsive design and cross-platfor
 **Gtajisan (Farhan)**  
 Email: ffjisan804@gmail.com
 
+# Website 
+game: [tap here](https://flappy-modi.onrender.com/)
 ## Features
 
 - HTML5 Canvas rendering for smooth 60 FPS gameplay
