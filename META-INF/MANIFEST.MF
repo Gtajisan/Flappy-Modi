@@ -1,0 +1,91 @@
+Manifest-Version: 1.0
+Archiver-Version: Plexus Archiver
+Build-Jdk: 1.6.0_43
+Built-By: Daniel
+Created-By: Apache Maven + dx 1.16
+Dex-Location: classes.dex
+
+Name: AndroidManifest.xml
+SHA-256-Digest: ab8w6AiThSz87Lk5F1MNSBYp0dPheKdUUhR8PjZ1Q60=
+
+Name: META-INF/maven/org.jbox2d/jbox2d-library/pom.properties
+SHA-256-Digest: XWZ12RvLXDcQy0n83fZ/ZTP37xRcKeKkUK0wMJJu8D8=
+
+Name: META-INF/maven/org.jbox2d/jbox2d-library/pom.xml
+SHA-256-Digest: PgZYQ/5bHY6SS+gnj2tUY7+XBmkuOdHca8LjvFtEz/0=
+
+Name: assets/LevelMap.scn.scn
+SHA-256-Digest: D4Yj8/Ev9I4gn/X2bsiRHCCsiTkvQJnTEw5RE0WWQQw=
+
+Name: assets/bg.png
+SHA-256-Digest: HKPvHAQzGDRFlzqofXEFyKL/JmCZSQJ2WS2IFd58lNk=
+
+Name: assets/br.jpg
+SHA-256-Digest: QriT4RJfWpFSCr2PkMaWJ/TpgSMqy04SLV7qf8CbuCc=
+
+Name: assets/dr.png
+SHA-256-Digest: Slmm8oF4qg26CVYv5IBF7pfVSl1ED3BSPqB5QSHtJnE=
+
+Name: assets/end.png
+SHA-256-Digest: DygbrPgcOAoPRTBw6FTGA/TAlpfvl80f3F4Ei8SSgao=
+
+Name: assets/gg.jpg
+SHA-256-Digest: S8rl64pl6ejmMgbJEKOyRXc3PA8dSeUTBBL+ihQ27Y0=
+
+Name: assets/gg.license.pdf
+SHA-256-Digest: BToEi0CKc+FSjRNJer6lnY8LiHD7tiEbaKCgjqQOlm4=
+
+Name: assets/hit.mp3
+SHA-256-Digest: rOp3y0+k4J00MO/AcuWZpS9XkWzba23l41DQ8qnkxA0=
+
+Name: assets/jump.jpg
+SHA-256-Digest: 9lZhtaR6EhrBuOEpvE5tI0xPRVsP59wP8xCRtaGyxss=
+
+Name: assets/level0.scn
+SHA-256-Digest: x/HclxVLAVNRsjijSLkf1i6vHNrOCxvIQwHjj36l3qI=
+
+Name: assets/level0.scn.xml
+SHA-256-Digest: BGKNhVyl/+Rn2RW1T22RolxXuIc9sStiuaRU5EdVzL4=
+
+Name: assets/level1.scn
+SHA-256-Digest: yJjB8StuGbwOi49pztMVyr11rZRTVDZNzWTDpz4jIrU=
+
+Name: assets/level1.scn.xml
+SHA-256-Digest: m7xJ938eEF6y7XFmi2zWgHsYrFCvYcUuxY2qYL2gQcg=
+
+Name: assets/lode.mp3
+SHA-256-Digest: R4tEoOyLQ9oyn90RMx9vQ7MCfOaevSUkqPMT97jtSHA=
+
+Name: assets/loss.mp3
+SHA-256-Digest: R4tEoOyLQ9oyn90RMx9vQ7MCfOaevSUkqPMT97jtSHA=
+
+Name: assets/md.png
+SHA-256-Digest: dlPkkhoKCNtdJgGlDYN1dtKzXvaRBIravNEpz1PYvc4=
+
+Name: assets/modi.png
+SHA-256-Digest: 7KL1pqMCuXhtjjO/P78DvAB6yT1jvAZCGDonGehDsaY=
+
+Name: assets/music.mp3
+SHA-256-Digest: Kq6BEMomQCmf5NZDZAi3V/tktvFCOb+otiUp1waJo48=
+
+Name: assets/swing.mp3
+SHA-256-Digest: iSL1fDxBpRhAjyqoRZVeTekRX71exDoy847bkX/Q2i8=
+
+Name: assets/win.mp3
+SHA-256-Digest: utebYvjEy9Y5wAkPV5388um+mDzYob6GVHCvp/mTW18=
+
+Name: assets/win_logo.jpg
+SHA-256-Digest: 33/dlLjYNeZUFTjZ+WqickY39IMWh/P21RgBeiB6iZI=
+
+Name: classes.dex
+SHA-256-Digest: lDz/P1sR3GyXWSTHXG6bNCs5N1l1wmwGaELyeRktpXc=
+
+Name: classes2.dex
+SHA-256-Digest: EVG44LUP+s8J/I9KikgpZxF+xvLue8dH2FME44SPwfs=
+
+Name: res/drawable/app_icon.png
+SHA-256-Digest: ugM9GtLZ5aMj/WnW40fQH2itvGpEqQdCOaKG/Gb2Y4I=
+
+Name: resources.arsc
+SHA-256-Digest: GJkAGjKLTnW/0AqbDuF52kr41TNB5anc+ib3pMWE2To=
+

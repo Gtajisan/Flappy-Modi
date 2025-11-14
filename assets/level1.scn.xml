@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?><scene>
+    <interface>
+        <com.idk.simple.GraphicInterface/>
+        <com.idk.simple.PhysicsInterface/>
+    </interface>
+    <objects>
+        <Default ac="true" p="-70.94418:34.82179" s="18.680418:49.55694" a="180.0">
+            <modifiers>
+                <com.idk.simple.SpriteRenderer/>
+                <com.idk.simple.Staticbody/>
+            </modifiers>
+        </Default>
+        <empty ac="true" p="528.3621:120.33581" s="895.65137:51.584045" a="0.0">
+            <modifiers>
+                <com.idk.simple.Staticbody/>
+                <com.idk.simple.SpriteRenderer/>
+            </modifiers>
+        </empty>
+        <empty ac="true" p="116.292015:-201.31958" s="483.75458:51.584045" a="0.0">
+            <modifiers>
+                <com.idk.simple.Staticbody/>
+                <com.idk.simple.SpriteRenderer/>
+            </modifiers>
+        </empty>
+        <empty ac="true" p="993.92993:-200.0" s="483.75458:51.584045" a="0.0">
+            <modifiers>
+                <com.idk.simple.Staticbody/>
+                <com.idk.simple.SpriteRenderer/>
+            </modifiers>
+        </empty>
+        <win ac="true" p="1299.8064:-176.5633" s="66.0:55.0" a="0.0">
+            <modifiers/>
+        </win>
+        <background ac="true" p="427.0632:-45.92827" s="1409.589:120.0" a="0.0">
+            <modifiers>
+                <com.idk.simple.SpriteRenderer/>
+            </modifiers>
+        </background>
+        <player ac="true" p="-177.0:2.0" s="8.0:8.0" a="0.0">
+            <modifiers>
+                <com.idk.simple.SpriteRenderer/>
+                <com.idk.simple.OrthoCamera/>
+                <com.idk.simple.Rigidbody/>
+                <com.test.MyScript/>
+            </modifiers>
+        </player>
+        <win ac="true" p="1292.4991:-77.13776" s="97.20753:23.695187" a="0.0">
+            <modifiers>
+                <com.idk.simple.SpriteRenderer/>
+            </modifiers>
+        </win>
+        <Default ac="true" p="-150.48343:-116.894485" s="19.657858:49.55694" a="0.0">
+            <modifiers>
+                <com.idk.simple.SpriteRenderer/>
+                <com.idk.simple.Staticbody/>
+            </modifiers>
+        </Default>
+        <Default ac="true" p="15.772982:-74.32841" s="19.657858:49.55694" a="0.0">
+            <modifiers>
+                <com.idk.simple.SpriteRenderer/>
+                <com.idk.simple.Staticbody/>
+            </modifiers>
+        </Default>
+        <Default ac="true" p="103.67904:-121.69888" s="19.657858:49.55694" a="0.0">
+            <modifiers>
+                <com.idk.simple.SpriteRenderer/>
+                <com.idk.simple.Staticbody/>
+            </modifiers>
+        </Default>
+        <Default ac="true" p="226.58488:34.82179" s="18.680418:49.55694" a="180.0">
+            <modifiers>
+                <com.idk.simple.SpriteRenderer/>
+                <com.idk.simple.Staticbody/>
+            </modifiers>
+        </Default>
+        <Default ac="true" p="122.60328:54.75365" s="18.680418:49.55694" a="180.0">
+            <modifiers>
+                <com.idk.simple.SpriteRenderer/>
+                <com.idk.simple.Staticbody/>
+            </modifiers>
+        </Default>
+        <Default ac="true" p="257.02206:-121.69888" s="19.657858:49.55694" a="45.0">
+            <modifiers>
+                <com.idk.simple.SpriteRenderer/>
+                <com.idk.simple.Staticbody/>
+            </modifiers>
+        </Default>
+        <Default ac="true" p="388.7994:-110.03109" s="19.657858:49.55694" a="45.0">
+            <modifiers>
+                <com.idk.simple.SpriteRenderer/>
+                <com.idk.simple.Staticbody/>
+            </modifiers>
+        </Default>
+        <Default ac="true" p="536.36273:-110.03109" s="19.657858:49.55694" a="45.0">
+            <modifiers>
+                <com.idk.simple.SpriteRenderer/>
+                <com.idk.simple.Staticbody/>
+            </modifiers>
+        </Default>
+        <Default ac="true" p="324.96985:29.982525" s="19.657858:49.55694" a="-45.0">
+            <modifiers>
+                <com.idk.simple.SpriteRenderer/>
+                <com.idk.simple.Staticbody/>
+            </modifiers>
+        </Default>
+        <Default ac="true" p="483.51447:29.982525" s="19.657858:49.55694" a="-45.0">
+            <modifiers>
+                <com.idk.simple.SpriteRenderer/>
+                <com.idk.simple.Staticbody/>
+            </modifiers>
+        </Default>
+        <Default ac="true" p="586.1225:29.982525" s="19.657858:49.55694" a="45.0">
+            <modifiers>
+                <com.idk.simple.SpriteRenderer/>
+                <com.idk.simple.Staticbody/>
+            </modifiers>
+        </Default>
+        <Default ac="true" p="689.73254:-172.05801" s="19.657858:49.55694" a="0.0">
+            <modifiers>
+                <com.idk.simple.SpriteRenderer/>
+                <com.idk.simple.Staticbody/>
+            </modifiers>
+        </Default>
+        <Default ac="true" p="775.2419:-116.90944" s="19.657858:49.55694" a="0.0">
+            <modifiers>
+                <com.idk.simple.SpriteRenderer/>
+                <com.idk.simple.Staticbody/>
+            </modifiers>
+        </Default>
+        <Default ac="true" p="862.36676:-62.31121" s="19.657858:49.55694" a="0.0">
+            <modifiers>
+                <com.idk.simple.SpriteRenderer/>
+                <com.idk.simple.Staticbody/>
+            </modifiers>
+        </Default>
+        <Default ac="true" p="955.04016:46.928646" s="19.657858:49.55694" a="180.0">
+            <modifiers>
+                <com.idk.simple.SpriteRenderer/>
+                <com.idk.simple.Staticbody/>
+            </modifiers>
+        </Default>
+        <Default ac="true" p="1040.5137:20.45741" s="19.657858:49.55694" a="180.0">
+            <modifiers>
+                <com.idk.simple.SpriteRenderer/>
+                <com.idk.simple.Staticbody/>
+            </modifiers>
+        </Default>
+        <Default ac="true" p="1120.5657:-134.22389" s="19.657858:49.55694" a="0.0">
+            <modifiers>
+                <com.idk.simple.SpriteRenderer/>
+                <com.idk.simple.Staticbody/>
+            </modifiers>
+        </Default>
+        <Default ac="true" p="978.00323:-134.22389" s="19.657858:49.55694" a="0.0">
+            <modifiers>
+                <com.idk.simple.SpriteRenderer/>
+                <com.idk.simple.Staticbody/>
+            </modifiers>
+        </Default>
+        <jump ac="false" p="0.0:0.0" s="50.0:50.0" a="0.0">
+            <modifiers>
+                <com.idk.simple.SpriteRenderer/>
+            </modifiers>
+        </jump>
+        <win ac="false" p="0.0:0.0" s="50.0:50.0" a="0.0">
+            <modifiers>
+                <com.idk.simple.SpriteRenderer/>
+            </modifiers>
+        </win>
+    </objects>
+</scene>
