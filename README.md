@@ -1,4 +1,6 @@
 # Flappy Modi
+[![IMG-20251114-105703.jpg](https://i.postimg.cc/28gQZGqg/IMG-20251114-105703.jpg)](https://postimg.cc/7fMJvgnN)
+
 A web-based Flappy Bird style game featuring responsive design and cross-platform compatibility. Built with modern web technologies for optimal performance and smooth gameplay.
 
 ## Author
